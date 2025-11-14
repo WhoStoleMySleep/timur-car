@@ -15,9 +15,11 @@ module.exports = {
     ignoreBuildErrors: true,
   },
   images: {
+    domains: ['images.unsplash.com'],
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "**",
         hostname: "res.cloudinary.com",
         port: "",
         pathname: "/**",
