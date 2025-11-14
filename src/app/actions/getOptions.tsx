@@ -5,18 +5,18 @@ import { useState } from "react";
 export const GetOptions = () => {
   const transmissionType = [
     // placeholder
-    { label: "Transmission..", id: "0" },
-    { label: "Manual", id: "1" },
-    { label: "Automatic", id: "2" },
+    { label: "Коробка передач..", id: "0" },
+    { label: "Механическая", id: "1" },
+    { label: "Автоматическая", id: "2" },
   ];
 
   const fuelType = [
     // placeholder
-    { label: "Fuel..", id: "0" },
-    { label: "Petrol", id: "1" },
-    { label: "Diesel", id: "2" },
-    { label: "Electric", id: "3" },
-    { label: "Hybrid", id: "4" },
+    { label: "Топливо..", id: "0" },
+    { label: "Бензин", id: "1" },
+    { label: "Дизель", id: "2" },
+    { label: "Электро", id: "3" },
+    { label: "Гибрид", id: "4" },
   ];
 
   const currentYear = new Date().getFullYear();
@@ -26,7 +26,7 @@ export const GetOptions = () => {
   );
 
   const yearsMap = [
-    { id: "0", label: "Year.." }, // Placeholder
+    { id: "0", label: "Год.." }, // Placeholder
     ...yearsArr.map((year, index) => ({
       id: (index + 1).toString(),
       label: year.toString(),
@@ -35,18 +35,18 @@ export const GetOptions = () => {
 
   const categoryType = [
     // placeholder
-    { label: "Category..", id: "0" },
-    { label: "Wagon", id: "1" },
-    { label: "Sedan", id: "2" },
-    { label: "Hatchback", id: "3" },
-    { label: "Coupe", id: "4" },
-    { label: "Convertible", id: "5" },
-    { label: "Van", id: "6" },
+    { label: "Категория..", id: "0" },
+    { label: "Универсал", id: "1" },
+    { label: "Седан", id: "2" },
+    { label: "Хэтчбек", id: "3" },
+    { label: "Купе", id: "4" },
+    { label: "Кабриолет", id: "5" },
+    { label: "Фургон", id: "6" },
   ];
 
   const numDoors = [
     // placeholder
-    { label: "Number of doors..", id: "0" },
+    { label: "Количество дверей..", id: "0" },
     { label: "2/3", id: "1" },
     { label: "4/5", id: "2" },
     { label: "6/7", id: "3" },
@@ -54,29 +54,29 @@ export const GetOptions = () => {
 
   const condition = [
     // placeholder
-    { label: "Condition..", id: "0" },
-    { label: "Used", id: "1" },
-    { label: "Brand new", id: "2" },
+    { label: "Состояние..", id: "0" },
+    { label: "Б/у", id: "1" },
+    { label: "Новый", id: "2" },
   ];
 
   const colors = [
     // placeholder
-    { label: "Color..", id: "0" },
-    { label: "White", id: "1" },
-    { label: "Black", id: "2" },
-    { label: "Brown", id: "3" },
-    { label: "Red", id: "4" },
-    { label: "Orange", id: "5" },
-    { label: "Yellow", id: "6" },
-    { label: "Green", id: "7" },
-    { label: "Blue", id: "8" },
-    { label: "Purple", id: "9" },
-    { label: "Pink", id: "10" },
-    { label: "Gray", id: "11" },
+    { label: "Цвет..", id: "0" },
+    { label: "Белый", id: "1" },
+    { label: "Черный", id: "2" },
+    { label: "Коричневый", id: "3" },
+    { label: "Красный", id: "4" },
+    { label: "Оранжевый", id: "5" },
+    { label: "Желтый", id: "6" },
+    { label: "Зеленый", id: "7" },
+    { label: "Синий", id: "8" },
+    { label: "Фиолетовый", id: "9" },
+    { label: "Розовый", id: "10" },
+    { label: "Серый", id: "11" },
   ];
 
   const [carMakes, setCarMakes] = useState([
-    { id: "0", label: "Make.." },
+    { id: "0", label: "Марка.." },
     { id: "1", label: "Seat" },
     { id: "2", label: "Renault" },
     { id: "3", label: "Peugeot" },

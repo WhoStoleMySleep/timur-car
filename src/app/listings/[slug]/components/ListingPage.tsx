@@ -34,7 +34,7 @@ const ListingPage: React.FC<ListingPageProps> = ({
 
   const formattedDate =
     items !== null
-      ? new Intl.DateTimeFormat("en", {
+      ? new Intl.DateTimeFormat("ru-RU", {
           year: "numeric",
           month: "long",
           day: "numeric",
@@ -75,60 +75,60 @@ const ListingPage: React.FC<ListingPageProps> = ({
               <ImageGallery listing={items} />
               <div className="col-span-1 flex flex-col lg:py-20 text-ellipsis">
                 <p className="my-6 font-rubik font-bold text-3xl text-gray-800">
-                  Summary
+                  Характеристики
                 </p>
                 <div className="grid grid-cols-3 text-sm xs:text-md gap-4 font-rubik font-light">
                   <p className="">
-                    Car type:
+Тип кузова:
                     <span className="text-british-green-4 pl-1 font-bold">
                       {item.coupe_type}
                     </span>
                   </p>
                   <p className="">
-                    Year:
+Год:
                     <span className="text-british-green-4 pl-1 font-bold">
                       {item.year}
                     </span>
                   </p>
                   <p className="break-normal">
-                    Condition: <br className="lg:hidden" />
+Состояние: <br className="lg:hidden" />
                     <span className="text-british-green-4 md:pl-1 font-bold text-ellipsis">
                       {item.condition}
                     </span>
                   </p>
                   <p className="">
-                    Fuel:
+Топливо:
                     <span className="text-british-green-4 pl-1 font-bold">
                       {item.fuel}
                     </span>
                   </p>
                   <p className="">
-                    Mileage:
+Пробег:
                     <span className="text-british-green-4 pl-1 font-bold">
                       {item.mileage}
                     </span>
                   </p>
                   <p className="">
-                    Color:
+Цвет:
                     <span className="text-british-green-4 pl-1 font-bold">
                       {item.color}
                     </span>
                   </p>
                   <p className="break-words">
-                    Transmission: <br className="lg:hidden" />
+Коробка: <br className="lg:hidden" />
                     <span className="text-british-green-4 md:pl-1 font-bold text-ellipsis">
                       {item.transmission}
                     </span>
                   </p>
                   <p className="">
-                    Number of doors:
+Кол-во дверей:
                     <span className="text-british-green-4 pl-1 font-bold">
                       {item.number_doors}
                     </span>
                   </p>
                   {item.variant ? (
                     <p className="">
-                      Variant:
+Модификация:
                       <span className="text-british-green-4 pl-1 font-bold">
                         {item.variant}
                       </span>
@@ -142,7 +142,7 @@ const ListingPage: React.FC<ListingPageProps> = ({
                 </div>
                 <div className="">
                   <p className="mt-8 mb-4 text-lg font-bold">
-                    Description from the seller:
+Описание от продавца:
                   </p>
                   <p className="text-md font-md">{item.body}</p>
                   <div className="pt-8">
@@ -154,7 +154,7 @@ const ListingPage: React.FC<ListingPageProps> = ({
                       <div>
                         <Menu.Button>
                           <button className="text-white mt-4 focus:ring-2 focus:outline-none focus:british-green-0 font-medium rounded-lg text-md px-4 py-2 text-center mr-4 md:mr-4 border border-white bg-british-green-1 hover:bg-british-green-2 dark:focus:ring-british-green-0">
-                            Contact the seller
+Связаться с продавцом
                           </button>
                         </Menu.Button>
                       </div>
@@ -179,7 +179,7 @@ const ListingPage: React.FC<ListingPageProps> = ({
                                     "block px-4 py-2 text-sm cursor-pointer"
                                   )}
                                 >
-                                  Email: {`${userEmail}`}
+Почта: {`${userEmail}`}
                                 </a>
                               )}
                             </Menu.Item>

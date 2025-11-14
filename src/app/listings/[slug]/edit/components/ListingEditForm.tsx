@@ -424,7 +424,7 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                   </div>
                   <div className="ml-3">
                     <h3 className="text-sm font-medium text-red-800">
-                      There were errors with your submission
+                      При отправке формы возникли ошибки
                     </h3>
                     <div className="mt-2 text-sm text-red-700">
                       <ul role="list" className="list-disc pl-5 space-y-1">
@@ -443,20 +443,20 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
           <div className="flex justify-center mx-auto sm:justify-end sticky top-0 z-10">
             {showSuccess && (
               <div className="absolute top-0 right-0 p-10 pt-20 sm:pt-10 z-10">
-                <AlertSuccess field={"Listing successfully edited!"}/>
+                <AlertSuccess field={"Объявление успешно отредактировано!"}/>
               </div>
             )}
           </div>
           <div className="flex flex-col justify-center mx-auto max-w-4xl mt-20 mb-16">
             <p className="mb-10 font-rubik place-self-center text-4xl font-medium">
-              Edit your listing
+              Редактировать объявление
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 px-8 md:grid-cols-2 lg:grid-cols-3 gap-16">
               <SelectMenuCustom
                 options={carMakesData}
                 dynamicId={makeId}
                 value={make}
-                label="Make"
+                label="Марка"
                 onChange={handleMakeChange}
                 error={make === "0" || make === "" ? !!selectMenusError : false}
               />
@@ -464,23 +464,23 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                 options={filteredCarModels}
                 dynamicId={modelId - 1} // -1 due to placeholder
                 value={model}
-                label="Model"
+                label="Модель"
                 onChange={handleModelChange}
                 error={
                   model === "0" || model === "" ? !!selectMenusError : false
                 }
               />
               <InputField
-                label="Variant"
+                label="Модификация"
                 value={variant}
-                placeholder="Variant..(M3, GTI)"
+                placeholder="Модификация (например, M3, GTI)"
                 onChange={handleVariantChange}
               />
               <SelectMenuCustom
                 options={transmissionData}
                 dynamicId={transmissionId}
                 value={transmission}
-                label="Transmission"
+                label="Коробка передач"
                 onChange={handleTransmissionChange}
                 error={
                   transmission === "0" || transmission === ""
@@ -493,7 +493,7 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                 options={fuelData}
                 dynamicId={fuelId}
                 value={fuel}
-                label="Fuel"
+                label="Топливо"
                 onChange={handleFuelChange}
                 error={fuel === "0" || fuel === "" ? !!selectMenusError : false}
               />
@@ -501,7 +501,7 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                 options={filteredYears}
                 dynamicId={yearId}
                 value={year}
-                label="Year"
+                label="Год выпуска"
                 onChange={handleYearChange}
                 error={year === "0" || year === "" ? !!selectMenusError : false}
               />
@@ -509,7 +509,7 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                 options={categoryData}
                 dynamicId={coupeId}
                 value={coupe_type}
-                label="Category"
+                label="Категория"
                 onChange={handleCategoryChange}
                 error={
                   coupe_type === "0" || coupe_type === ""
@@ -521,7 +521,7 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                 options={numDoorsData}
                 dynamicId={numDoorsId}
                 value={number_doors}
-                label="Number of doors"
+                label="Количество дверей"
                 onChange={handleDoorsChange}
                 error={
                   number_doors === "0" || number_doors === ""
@@ -533,7 +533,7 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                 options={conditionData}
                 dynamicId={conditionId}
                 value={condition}
-                label="Condition"
+                label="Состояние"
                 onChange={handleConditionChange}
                 error={
                   condition === "0" || condition === ""
@@ -545,50 +545,50 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                 options={colorsData}
                 dynamicId={colorId}
                 value={color}
-                label="Color"
+                label="Цвет"
                 onChange={handleColorChange}
                 error={
                   color === "0" || color === "" ? !!selectMenusError : false
                 }
               />
               <InputField
-                label="Mileage"
+                label="Пробег"
                 type="number"
                 value={mileage}
-                placeholder="Mileage.."
+                placeholder="Пробег.."
                 onChange={handleMileageChange}
                 error={mileage === "" ? !!inputFieldsError : false}
               />
               <InputField
-                label="Power"
+                label="Мощность (л.с.)"
                 type="number"
                 value={power}
-                placeholder="Power.."
+                placeholder="Мощность.."
                 onChange={handlePowerChange}
                 error={power === "" ? !!inputFieldsError : false}
               />
               <InputField
-                label="Price"
+                label="Цена"
                 type="number"
                 value={price}
-                placeholder="Price.."
+                placeholder="Цена.."
                 onChange={handlePriceChange}
                 error={price === "" ? !!inputFieldsError : false}
               />
               <div className="sm:col-span-2 md:col-span-2 lg:col-span-3 space-y-8">
                 <InputField
-                  label="Title"
+                  label="Заголовок"
                   type="text"
                   value={title}
-                  placeholder="Listing title.."
+                  placeholder="Название объявления.."
                   onChange={handleTitleChange}
                   error={title === "" ? !!inputFieldsError : false}
                 />
                 <InputField
-                  label="Description"
+                  label="Описание"
                   type="text"
                   value={description}
-                  placeholder="Description.."
+                  placeholder="Описание.."
                   onChange={handleDescriptionChange}
                   makeBigger
                   error={description === "" ? !!inputFieldsError : false}
@@ -608,7 +608,7 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                 <div className="bg-sky-200 mt-[21rem] pl-2 pb-4 md:pb-0 rounded-xl mx-10 sm:mx-24 md:mx-64">
                   <div className="flex w-full h-full flex-col items-center justify-center gap-y-6">
                     <p className="pt-2 font-rubik font-normal text-xl text-blue-800">
-                      Upload Photos
+                      Загрузить фотографии
                     </p>
                     <CldUploadButton
                       options={{ maxFiles: 6 }}
@@ -623,7 +623,7 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                           className="h-8 w-8 mr-2 mb-1"
                           aria-hidden="true"
                         />
-                        Upload
+                        Загрузить
                       </button>
                     </CldUploadButton>
                   </div>
@@ -636,7 +636,7 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
                   }`}
                   disabled={isLoading}
                 >
-                  Submit
+                  Обновить
                 </button>
               </div>
             </div>

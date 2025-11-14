@@ -151,7 +151,7 @@ export const Navbar: React.FC<NavBarProps> = ({ currentUser }) => {
                       <Menu as="div" className="ml-3 relative">
                         <div>
                           <Menu.Button className="bg-british-green-2 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
-                            <span className="sr-only">Open user menu</span>
+                            <span className="sr-only">Открыть меню пользователя</span>
                             <UserCircleIcon
                               className="h-9 w-9 text-gray-100 cursor-pointer"
                               aria-hidden="true"
@@ -177,7 +177,7 @@ export const Navbar: React.FC<NavBarProps> = ({ currentUser }) => {
                                     "block px-4 py-2 text-sm text-gray-700"
                                   )}
                                 >
-                                  My listings
+                                  Мои объявления
                                 </a>
                               )}
                             </Menu.Item>
@@ -192,7 +192,7 @@ export const Navbar: React.FC<NavBarProps> = ({ currentUser }) => {
                                       !isAdmin ? "hidden" : ""
                                     )}
                                   >
-                                    User listings
+                                    Объявления пользователей
                                   </a>
                                 )}
                               </Menu.Item>
@@ -207,7 +207,7 @@ export const Navbar: React.FC<NavBarProps> = ({ currentUser }) => {
                                       "block px-4 py-2 text-sm text-gray-700"
                                     )}
                                   >
-                                    Reports
+                                    Отчеты
                                   </a>
                                 )}
                               </Menu.Item>
@@ -223,7 +223,7 @@ export const Navbar: React.FC<NavBarProps> = ({ currentUser }) => {
                                       "cursor-pointer block px-4 py-2 text-sm text-gray-700"
                                     )}
                                   >
-                                    Log out
+                                    Выйти
                                   </a>
                                 )}
                               </Menu.Item>
