@@ -55,11 +55,18 @@ export const Navbar: React.FC<NavBarProps> = ({ currentUser }) => {
       router.prefetch("/signin");
       router.prefetch("/");
     }
-  }, [status, router, sessionStatus, userRole, isAdmin, currentUser]);
+  }, [status, router, userRole]);
 
-  const handleLogout = () => {
-    signOut();
-    router.push("/");
+  const handleLogout = async () => {
+    try {
+      await signOut({ redirect: false });
+      setSessionStatus(false);
+      setIsAdmin(false);
+      router.push('/');
+      router.refresh();
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
 
   const navigation = [
@@ -215,16 +222,18 @@ export const Navbar: React.FC<NavBarProps> = ({ currentUser }) => {
                             {sessionStatus && (
                               <Menu.Item>
                                 {({ active }) => (
-                                  <a
-                                    onClick={handleLogout}
-                                    href=""
+                                  <button
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      handleLogout();
+                                    }}
                                     className={classNames(
                                       active ? "bg-gray-100" : "",
-                                      "cursor-pointer block px-4 py-2 text-sm text-gray-700"
+                                      "w-full text-left px-4 py-2 text-sm text-gray-700"
                                     )}
                                   >
                                     Выйти
-                                  </a>
+                                  </button>
                                 )}
                               </Menu.Item>
                             )}

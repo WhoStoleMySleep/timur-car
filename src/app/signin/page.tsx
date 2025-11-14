@@ -71,7 +71,7 @@ export default function SignIn() {
     setIsLoading(true);
     signIn("credentials", {
       email: 'test@test.com',
-      password: 'testpassword!',
+      password: 'testpassword',
       redirect: true,
       callbackUrl: "/"
     })
