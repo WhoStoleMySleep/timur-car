@@ -5,10 +5,9 @@ import SelectMenuCustom from "../../../../components/selectMenuCustom";
 import SelectMenu from "../../../../components/selectMenu";
 import InputField from "../../../../components/inputField";
 import GetOptions from "@/app/actions/getOptions";
-import { XCircleIcon, ArrowUpOnSquareIcon } from "@heroicons/react/20/solid";
-import { CldUploadButton } from "next-cloudinary";
-import axios from "axios";
 import { Listing } from "@prisma/client";
+import axios from "axios";
+import { XCircleIcon } from "@heroicons/react/20/solid";
 import { useRouter } from "next/navigation";
 import { redirect } from "next/navigation";
 import { LoadingComponent } from "@/app/loading";
@@ -64,7 +63,6 @@ export default function Create() {
   const [variant, setVariant] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [photos, setPhotos] = useState<any[]>([]);
 
   const [filteredCarModels, setFilteredCarModels] = useState<Option[]>([
     carModelsData[0],
@@ -73,7 +71,6 @@ export default function Create() {
   const [inputFieldsError, setInputFieldsError] = useState("");
   const [selectMenusError, setSelectMenusError] = useState("");
   const [titleDescriptionError, setTitleDescriptionError] = useState("");
-  const [photosError, setPhotosError] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
 
@@ -191,19 +188,6 @@ export default function Create() {
     console.log("desc", event.target.value);
   };
 
-  const handleUpload = (result: any) => {
-    const check = photos.includes(result);
-    if (check) {
-      const id = photos.indexOf(result);
-      const newArr = photos;
-      newArr.splice(id, 1);
-      setPhotos([...newArr]);
-    } else {
-      photos.push(result.info.secure_url);
-      setPhotos([...photos]);
-    }
-  };
-
   const resetState = () => {
     setInputFieldsError("");
     setSelectMenusError("");
@@ -219,11 +203,11 @@ export default function Create() {
   };
 
   const handleSubmit = useCallback(async () => {
-    console.log("photos", photos);
     setIsLoading(true);
     resetState();
 
-    await axios
+    try {
+      const response = await axios
       .post("/api/listings", {
         title: `${title}`,
         body: ``,
@@ -242,42 +226,33 @@ export default function Create() {
         variant: `${variant}`,
         color: `${color}`,
         description: `${description}`,
-        // photos: photosUrls as string[],
-        photos: photos,
-      })
-      .then((callback) => {
-        const { data } = callback.data;
-        console.log("callback:", callback);
-        console.log("callback.data:", callback.data);
-        console.log("callback.data.slug:", callback.data.slug);
-        router.push(`/listings/${callback.data.slug}`);
-        const slugTest = callback.data.slug;
-        setSlugData(slugTest);
-        router.push(`/listings/${slugTest}`);
-        router.push(`/listings/${callback.data.slug}`);
-        handleRedirect();
-      })
-      .catch((callback) => {
-        if (callback.response) {
-          const { data } = callback.response?.data || {};
-          // resetState();
-          console.log(callback);
-          setInputFieldsError(data?.inputField);
-          setSelectMenusError(data?.selectMenu);
-          setTitleDescriptionError(data?.titleDescription);
-          setPhotosError(data?.photos);
-          window.scrollTo(0, 80);
-        } else {
-          console.log(callback);
-        }
-      })
-      .finally(() => {
-        if (slugData.length > 1) {
-          router.push(`/listings/${slugData}`);
-        }
-        setIsLoading(false);
-        // router.push(`/listings/${slugData}`)
       });
+      const { data } = response.data;
+      console.log("Response:", response);
+      console.log("Response data:", response.data);
+      console.log("Slug:", response.data.slug);
+
+      const slugTest = response.data.slug;
+      setSlugData(slugTest);
+      router.push(`/listings/${slugTest}`);
+      handleRedirect();
+    } catch (error: any) {
+      if (error.response) {
+        const { data } = error.response?.data || {};
+        console.log(error);
+        setInputFieldsError(data?.inputField);
+        setSelectMenusError(data?.selectMenu);
+        setTitleDescriptionError(data?.titleDescription);
+        window.scrollTo(0, 80);
+      } else {
+        console.log(error);
+      }
+    } finally {
+      if (slugData.length > 1) {
+        router.push(`/listings/${slugData}`);
+      }
+      setIsLoading(false);
+    }
   }, [
     title,
     description,
@@ -293,11 +268,10 @@ export default function Create() {
     mileage,
     power,
     color,
-    photos,
+    variant,
     handleRedirect,
     router,
     slugData,
-    variant,
   ]);
 
   /* eslint-disable-next-line no-unsafe-optional-chaining */
@@ -316,8 +290,7 @@ export default function Create() {
           <div className="sm:mx-auto sm:w-full sm:max-w-sm mt-16">
             {(selectMenusError ||
               inputFieldsError ||
-              titleDescriptionError ||
-              photosError) && (
+              titleDescriptionError) && (
               <div className="rounded-md bg-red-50 p-4">
                 <div className="flex">
                   <div className="flex-shrink-0">
@@ -337,7 +310,6 @@ export default function Create() {
                           <li>{titleDescriptionError}</li>
                         )}
                         {inputFieldsError && <li>{inputFieldsError}</li>}
-                        {photosError && <li>{photosError}</li>}
                       </ul>
                     </div>
                   </div>
@@ -481,29 +453,6 @@ export default function Create() {
                   makeBigger
                   error={description === "" ? !!inputFieldsError : false}
                 />
-                <div className="bg-sky-200 mt-[21rem] pl-2 pb-4 md:pb-0 rounded-xl mx-24 md:mx-64">
-                  <div className="flex w-full h-full flex-col items-center justify-center gap-y-6">
-                    <p className="pt-2 font-rubik font-normal text-xl text-blue-800">
-                      Загрузить фотографии
-                    </p>
-                    <CldUploadButton
-                      options={{ maxFiles: 6 }}
-                      onUpload={handleUpload}
-                      uploadPreset="yghyzh2p"
-                    >
-                      <button
-                        type="button"
-                        className=" text-white flex items-center justify-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-4 mb-4 md:mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      >
-                        <ArrowUpOnSquareIcon
-                          className="h-8 w-8 mr-2 mb-1"
-                          aria-hidden="true"
-                        />
-                        Загрузить
-                      </button>
-                    </CldUploadButton>
-                  </div>
-                </div>
                 <button
                   onClick={handleSubmit}
                   type="button"

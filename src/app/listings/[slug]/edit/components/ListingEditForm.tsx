@@ -8,8 +8,7 @@ import {
   useState,
 } from "react";
 import GetOptions from "@/app/actions/getOptions";
-import { XCircleIcon, ArrowUpOnSquareIcon } from "@heroicons/react/20/solid";
-import { CldUploadButton } from "next-cloudinary";
+import { XCircleIcon } from "@heroicons/react/20/solid";
 import axios from "axios";
 import { Listing } from "@prisma/client";
 import SelectMenuCustom from "../../../../../../components/selectMenuCustom";
@@ -17,25 +16,7 @@ import InputField from "../../../../../../components/inputField";
 import getListingBySlug from "@/app/actions/getListingBySlug";
 import { useRouter } from "next/navigation";
 
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  TouchSensor,
-} from "@dnd-kit/core";
 
-import {
-  arrayMove,
-  horizontalListSortingStrategy,
-  rectSwappingStrategy,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import SortableItem from "./SortableItem";
 import AlertSuccess from "../../../../../../components/alertSuccess";
 
 interface OptionsProps {
@@ -102,11 +83,10 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
   const [variant, setVariant] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [photos, setPhotos] = useState<any[]>([]);
+  const [photos] = useState<string[]>([]);
 
   const [modelIdState, setModelIdState] = useState<number>();
 
-  // const [filteredCarModels, setFilteredCarModels] = useState<Option[]>([]);
   const [filteredCarModels, setFilteredCarModels] =
     useState<Option[]>(carModelsData);
   const [filteredYears, setFilteredYears] = useState<OptionsProps[]>(yearsData);
@@ -143,7 +123,6 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
         setVariant(item.variant);
         setTitle(item.title);
         setDescription(item.body);
-        setPhotos([...item.photos]);
       }
     }
   }, [initialItems, isMounted]);
@@ -281,19 +260,6 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
     console.log("desc", event.target.value);
   };
 
-  const handleUpload = (result: any) => {
-    const check = photos.includes(result);
-    if (check) {
-      const id = photos.indexOf(result);
-      const newArr = photos;
-      newArr.splice(id, 1);
-      setPhotos([...newArr]);
-    } else {
-      photos.push(result.info.secure_url);
-      setPhotos([...photos]);
-    }
-  };
-
   const resetState = () => {
     setInputFieldsError("");
     setSelectMenusError("");
@@ -303,7 +269,6 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
   const slug = item.slug;
 
   const handleSubmit = useCallback(async () => {
-    console.log("photos", photos);
     setIsLoading(true);
     setShowSuccess(false)
     resetState();
@@ -326,7 +291,6 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
         variant: `${variant}`,
         color: `${color}`,
         description: `${description}`,
-        photos: photos,
       })
       .then((callback) => {
         console.log(callback);
@@ -363,37 +327,12 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
     mileage,
     power,
     color,
-    photos,
     slug,
     variant,
   ]);
 
-  const [photosData, setPhotosData] = useState(photos);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-    useSensor(TouchSensor),
-  );
-
-  function handleDragEnd(event: any) {
-    const { active, over } = event;
-
-    if (active.id !== over.id) {
-      setPhotos((photos) => {
-        const oldIndex = photos.indexOf(active.id);
-        const newIndex = photos.indexOf(over.id);
-
-        return arrayMove(photos, oldIndex, newIndex);
-      });
-    }
-  }
-
   const [showSuccess, setShowSuccess] = useState(false);
 
-  //fixes hydration error
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -403,247 +342,170 @@ export const ListingEditForm: React.FC<EditFormProps> = ({ initialItems }) => {
   }
 
   return (
-    <>
-      <div className="pt-[64px] md:pt-0 px-8 md:px-0">
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <div className="absolute sm:mx-auto sm:w-full sm:max-w-sm mt-16">
-            {(selectMenusError ||
-              inputFieldsError ||
-              titleDescriptionError) && (
-              <div className="rounded-md bg-red-50 p-4">
-                <div className="flex">
-                  <div className="flex-shrink-0">
-                    <XCircleIcon
-                      className="h-5 w-5 text-red-400"
-                      aria-hidden="true"
-                    />
-                  </div>
-                  <div className="ml-3">
-                    <h3 className="text-sm font-medium text-red-800">
-                      При отправке формы возникли ошибки
-                    </h3>
-                    <div className="mt-2 text-sm text-red-700">
-                      <ul role="list" className="list-disc pl-5 space-y-1">
-                        {selectMenusError && <li>{selectMenusError}</li>}
-                        {titleDescriptionError && (
-                          <li>{titleDescriptionError}</li>
-                        )}
-                        {inputFieldsError && <li>{inputFieldsError}</li>}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-          <div className="flex justify-center mx-auto sm:justify-end sticky top-0 z-10">
-            {showSuccess && (
-              <div className="absolute top-0 right-0 p-10 pt-20 sm:pt-10 z-10">
-                <AlertSuccess field={"Объявление успешно отредактировано!"}/>
-              </div>
-            )}
-          </div>
-          <div className="flex flex-col justify-center mx-auto max-w-4xl mt-20 mb-16">
-            <p className="mb-10 font-rubik place-self-center text-4xl font-medium">
-              Редактировать объявление
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 px-8 md:grid-cols-2 lg:grid-cols-3 gap-16">
-              <SelectMenuCustom
-                options={carMakesData}
-                dynamicId={makeId}
-                value={make}
-                label="Марка"
-                onChange={handleMakeChange}
-                error={make === "0" || make === "" ? !!selectMenusError : false}
-              />
-              <SelectMenuCustom
-                options={filteredCarModels}
-                dynamicId={modelId - 1} // -1 due to placeholder
-                value={model}
-                label="Модель"
-                onChange={handleModelChange}
-                error={
-                  model === "0" || model === "" ? !!selectMenusError : false
-                }
-              />
-              <InputField
-                label="Модификация"
-                value={variant}
-                placeholder="Модификация (например, M3, GTI)"
-                onChange={handleVariantChange}
-              />
-              <SelectMenuCustom
-                options={transmissionData}
-                dynamicId={transmissionId}
-                value={transmission}
-                label="Коробка передач"
-                onChange={handleTransmissionChange}
-                error={
-                  transmission === "0" || transmission === ""
-                    ? !!selectMenusError
-                    : false
-                }
-                // error={isValidOption(transmission, transmissionData, '0') ? !!selectMenusError : false}
-              />
-              <SelectMenuCustom
-                options={fuelData}
-                dynamicId={fuelId}
-                value={fuel}
-                label="Топливо"
-                onChange={handleFuelChange}
-                error={fuel === "0" || fuel === "" ? !!selectMenusError : false}
-              />
-              <SelectMenuCustom
-                options={filteredYears}
-                dynamicId={yearId}
-                value={year}
-                label="Год выпуска"
-                onChange={handleYearChange}
-                error={year === "0" || year === "" ? !!selectMenusError : false}
-              />
-              <SelectMenuCustom
-                options={categoryData}
-                dynamicId={coupeId}
-                value={coupe_type}
-                label="Категория"
-                onChange={handleCategoryChange}
-                error={
-                  coupe_type === "0" || coupe_type === ""
-                    ? !!selectMenusError
-                    : false
-                }
-              />
-              <SelectMenuCustom
-                options={numDoorsData}
-                dynamicId={numDoorsId}
-                value={number_doors}
-                label="Количество дверей"
-                onChange={handleDoorsChange}
-                error={
-                  number_doors === "0" || number_doors === ""
-                    ? !!selectMenusError
-                    : false
-                }
-              />
-              <SelectMenuCustom
-                options={conditionData}
-                dynamicId={conditionId}
-                value={condition}
-                label="Состояние"
-                onChange={handleConditionChange}
-                error={
-                  condition === "0" || condition === ""
-                    ? !!selectMenusError
-                    : false
-                }
-              />
-              <SelectMenuCustom
-                options={colorsData}
-                dynamicId={colorId}
-                value={color}
-                label="Цвет"
-                onChange={handleColorChange}
-                error={
-                  color === "0" || color === "" ? !!selectMenusError : false
-                }
-              />
-              <InputField
-                label="Пробег"
-                type="number"
-                value={mileage}
-                placeholder="Пробег.."
-                onChange={handleMileageChange}
-                error={mileage === "" ? !!inputFieldsError : false}
-              />
-              <InputField
-                label="Мощность (л.с.)"
-                type="number"
-                value={power}
-                placeholder="Мощность.."
-                onChange={handlePowerChange}
-                error={power === "" ? !!inputFieldsError : false}
-              />
-              <InputField
-                label="Цена"
-                type="number"
-                value={price}
-                placeholder="Цена.."
-                onChange={handlePriceChange}
-                error={price === "" ? !!inputFieldsError : false}
-              />
-              <div className="sm:col-span-2 md:col-span-2 lg:col-span-3 space-y-8">
-                <InputField
-                  label="Заголовок"
-                  type="text"
-                  value={title}
-                  placeholder="Название объявления.."
-                  onChange={handleTitleChange}
-                  error={title === "" ? !!inputFieldsError : false}
+    <div className="pt-[64px] md:pt-0 px-8 md:px-0">
+      <div className="absolute sm:mx-auto sm:w-full sm:max-w-sm mt-16">
+        {(selectMenusError ||
+          inputFieldsError ||
+          titleDescriptionError) && (
+          <div className="rounded-md bg-red-50 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <XCircleIcon
+                  className="h-5 w-5 text-red-400"
+                  aria-hidden="true"
                 />
-                <InputField
-                  label="Описание"
-                  type="text"
-                  value={description}
-                  placeholder="Описание.."
-                  onChange={handleDescriptionChange}
-                  makeBigger
-                  error={description === "" ? !!inputFieldsError : false}
-                />
-                <div className="">
-                  <SortableContext
-                    items={photos}
-                    strategy={horizontalListSortingStrategy}
-                  >
-                    <div className="flex flex-wrap gap-8 bg-slate-100 px-4 py-6 rounded-md">
-                      {photos.map((photo) => (
-                        <SortableItem key={photo.id} id={photo} />
-                      ))}
-                    </div>
-                  </SortableContext>
+              </div>
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">
+                  При отправке формы возникли ошибки
+                </h3>
+                <div className="mt-2 text-sm text-red-700">
+                  <ul role="list" className="list-disc pl-5 space-y-1">
+                    {selectMenusError && <li>{selectMenusError}</li>}
+                    {titleDescriptionError && (
+                      <li>{titleDescriptionError}</li>
+                    )}
+                    {inputFieldsError && <li>{inputFieldsError}</li>}
+                  </ul>
                 </div>
-                <div className="bg-sky-200 mt-[21rem] pl-2 pb-4 md:pb-0 rounded-xl mx-10 sm:mx-24 md:mx-64">
-                  <div className="flex w-full h-full flex-col items-center justify-center gap-y-6">
-                    <p className="pt-2 font-rubik font-normal text-xl text-blue-800">
-                      Загрузить фотографии
-                    </p>
-                    <CldUploadButton
-                      options={{ maxFiles: 6 }}
-                      onUpload={handleUpload}
-                      uploadPreset="yghyzh2p"
-                    >
-                      <button
-                        type="button"
-                        className=" text-white flex items-center justify-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-4 mb-4 md:mr-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                      >
-                        <ArrowUpOnSquareIcon
-                          className="h-8 w-8 mr-2 mb-1"
-                          aria-hidden="true"
-                        />
-                        Загрузить
-                      </button>
-                    </CldUploadButton>
-                  </div>
-                </div>
-                <button
-                  onClick={handleSubmit}
-                  type="button"
-                  className={`w-full text-white flex items-center justify-center bg-british-green-0 hover:bg-british-green-3 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-4 md:mr-2 dark:focus:ring-blue-800 ${
-                    isLoading ? "cursor-not-allowed opacity-80" : ""
-                  }`}
-                  disabled={isLoading}
-                >
-                  Обновить
-                </button>
               </div>
             </div>
           </div>
-        </DndContext>
+        )}
       </div>
-    </>
+      <div className="flex flex-col justify-center mx-auto max-w-4xl mt-20 mb-16">
+        <p className="mb-10 font-rubik place-self-center text-4xl font-medium">
+          Редактировать объявление
+        </p>
+        <div className="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
+          <SelectMenuCustom
+            options={carMakesData}
+            dynamicId="make"
+            value={make}
+            label="Марка"
+            onChange={handleMakeChange}
+            error={make === "0" || make === "" ? !!selectMenusError : false}
+          />
+          <SelectMenuCustom
+            options={filteredCarModels}
+            dynamicId="model"
+            value={model}
+            label="Модель"
+            onChange={handleModelChange}
+            error={model === "0" || model === "" ? !!selectMenusError : false}
+          />
+          <SelectMenuCustom
+            options={transmissionData}
+            dynamicId="transmission"
+            value={transmission}
+            label="Коробка передач"
+            onChange={handleTransmissionChange}
+            error={transmission === "0" || transmission === "" ? !!selectMenusError : false}
+          />
+          <SelectMenuCustom
+            options={fuelData}
+            dynamicId="fuel"
+            value={fuel}
+            label="Топливо"
+            onChange={handleFuelChange}
+            error={fuel === "0" || fuel === "" ? !!selectMenusError : false}
+          />
+          <SelectMenuCustom
+            options={yearsData}
+            dynamicId="year"
+            value={year}
+            label="Год выпуска"
+            onChange={handleYearChange}
+            error={year === "0" || year === "" ? !!selectMenusError : false}
+          />
+          <SelectMenuCustom
+            options={categoryData}
+            dynamicId="category"
+            value={coupe_type}
+            label="Категория"
+            onChange={handleCategoryChange}
+            error={coupe_type === "0" || coupe_type === "" ? !!selectMenusError : false}
+          />
+          <SelectMenuCustom
+            options={numDoorsData}
+            dynamicId="doors"
+            value={number_doors}
+            label="Количество дверей"
+            onChange={handleDoorsChange}
+            error={number_doors === "0" || number_doors === "" ? !!selectMenusError : false}
+          />
+          <SelectMenuCustom
+            options={conditionData}
+            dynamicId="condition"
+            value={condition}
+            label="Состояние"
+            onChange={handleConditionChange}
+            error={condition === "0" || condition === "" ? !!selectMenusError : false}
+          />
+          <SelectMenuCustom
+            options={colorsData}
+            dynamicId="color"
+            value={color}
+            label="Цвет"
+            onChange={handleColorChange}
+            error={color === "0" || color === "" ? !!selectMenusError : false}
+          />
+          <InputField
+            label="Пробег"
+            type="number"
+            value={mileage}
+            placeholder="Пробег.."
+            onChange={handleMileageChange}
+            error={mileage === "" ? !!inputFieldsError : false}
+          />
+          <InputField
+            label="Мощность (л.с.)"
+            type="number"
+            value={power}
+            placeholder="Мощность.."
+            onChange={handlePowerChange}
+            error={power === "" ? !!inputFieldsError : false}
+          />
+          <InputField
+            label="Цена"
+            type="number"
+            value={price}
+            placeholder="Цена.."
+            onChange={handlePriceChange}
+            error={price === "" ? !!inputFieldsError : false}
+          />
+          <div className="sm:col-span-2 md:col-span-2 lg:col-span-3 space-y-8">
+            <InputField
+              label="Заголовок"
+              type="text"
+              value={title}
+              placeholder="Название объявления.."
+              onChange={handleTitleChange}
+              error={title === "" ? !!inputFieldsError : false}
+            />
+            <InputField
+              label="Описание"
+              type="text"
+              value={description}
+              placeholder="Описание.."
+              onChange={handleDescriptionChange}
+              makeBigger
+              error={description === "" ? !!inputFieldsError : false}
+            />
+            <button
+              onClick={handleSubmit}
+              type="button"
+              className={`w-full text-white flex items-center justify-center bg-british-green-0 hover:bg-british-green-3 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-6 py-4 md:mr-2 dark:focus:ring-blue-800 ${
+                isLoading ? "cursor-not-allowed opacity-80" : ""
+              }`}
+              disabled={isLoading}
+            >
+              {isLoading ? "Обновление..." : "Обновить"}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
